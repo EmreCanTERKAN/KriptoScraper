@@ -25,7 +25,7 @@ public class SolanaScraper
 
         Console.WriteLine($"{now:yyyy-MM-dd HH:mm:ss} - 📈 Solana/USDT Fiyatı (MEXC): {priceText} $");
 
-        if (decimal.TryParse(priceText, NumberStyles.Any,CultureInfo.InvariantCulture, out var price))
+        if (decimal.TryParse(priceText, NumberStyles.Any, CultureInfo.InvariantCulture, out var price))
         {
             var log = new SolanaLog
             {
@@ -33,13 +33,15 @@ public class SolanaScraper
                 Price = price
             };
 
-            //var csvService = new CsvService();
+            var csvService = new CsvService();
 
-            //var folder = "logs";
-            //Directory.CreateDirectory(folder); // klasörü oluşturur (varsa dokunmaz)
+            var folder = "logs";
+            Directory.CreateDirectory(folder); // klasörü oluşturur (varsa dokunmaz)
 
-            //var filePath = Path.Combine(folder, "solana_log.csv");
-            //csvService.WriteToCsv(new List<SolanaLog> { log }, filePath);
+            var fileName = $"{now.ToString("dd.MM.yyyy")}-solana_log.csv";
+            var filePath = Path.Combine(folder, fileName);
+
+            csvService.WriteToCsv(log, filePath);
 
         }
     }
