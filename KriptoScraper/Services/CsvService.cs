@@ -1,7 +1,8 @@
 ﻿using CsvHelper;
+using KriptoScraper.Logs;
 using System.Globalization;
 
-namespace KriptoScraper;
+namespace KriptoScraper.Services;
 
 public class CsvService
 {

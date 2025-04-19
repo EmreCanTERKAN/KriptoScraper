@@ -1,8 +1,13 @@
-﻿Console.OutputEncoding = System.Text.Encoding.UTF8;
+﻿using KriptoScraper.BinanceTrackers;
+using KriptoScraper.Services;
 
-SchedulerService schedulerService = new();
+Console.OutputEncoding = System.Text.Encoding.UTF8;
 
 Console.WriteLine("🔁 Solana takip otomasyonu başlatıldı.");
-await schedulerService.StartScheduler();
+var logger = new CsvConsoleLogger();
+var monitor = new PriceMonitorService(logger);
+var tracker = new BinanceSolanaTracker(monitor, "SOLUSDT");
+
+await tracker.StartAsync();
 
 Console.ReadLine();
