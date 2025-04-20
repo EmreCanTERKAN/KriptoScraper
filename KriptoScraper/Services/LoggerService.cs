@@ -1,10 +1,11 @@
 ﻿using KriptoScraper.Interfaces;
-using KriptoScraper.Logs;
+using KriptoScraper.LogInfos;
 
 namespace KriptoScraper.Services;
-public class CsvConsoleLogger : ILoggerService
+public class LoggerService(
+    ICsvService csvService) : ILoggerService
 {
-    public Task LogAsync(string symbol, DateTime time, decimal price)
+    public async Task LogAsync(string symbol, DateTime time, decimal price)
     {
         Console.WriteLine($"{time:yyyy-MM-dd HH:mm:ss} - 📈 {symbol} Fiyatı (Binance): {price} $");
 
@@ -19,10 +20,8 @@ public class CsvConsoleLogger : ILoggerService
         var fileName = $"{time:dd.MM.yyyy}-{symbol.ToLower()}_log.csv";
         var filePath = Path.Combine(folder, fileName);
 
-        var csvService = new CsvService();
-        csvService.WriteToCsv(log, filePath);
+        await csvService.WriteToCsvAsync(log, filePath);
 
-        return Task.CompletedTask;
     }
 }
 

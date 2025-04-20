@@ -1,6 +1,6 @@
 ﻿using CsvHelper.Configuration.Attributes;
 
-namespace KriptoScraper.Logs;
+namespace KriptoScraper.LogInfos;
 public class SolanaLog
 {
     [Name("Zaman")]

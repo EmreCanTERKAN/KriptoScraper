@@ -1,26 +1,29 @@
 ﻿using CsvHelper;
-using KriptoScraper.Logs;
+using KriptoScraper.Interfaces;
+using KriptoScraper.LogInfos;
 using System.Globalization;
 
 namespace KriptoScraper.Services;
 
-public class CsvService
+public class CsvService : ICsvService
 {
-    public void WriteToCsv(SolanaLog data, string filePath)
+    public async Task WriteToCsvAsync(SolanaLog data, string filePath)
     {
         var fileExists = File.Exists(filePath);
 
-        using var writer = new StreamWriter(filePath, append: true);
+        await using var stream = new FileStream(filePath, FileMode.Append, FileAccess.Write, FileShare.Read, bufferSize: 4096, useAsync: true);
+        await using var writer = new StreamWriter(stream);
+
         using var csv = new CsvWriter(writer, CultureInfo.InvariantCulture);
 
         if (!fileExists)
         {
             csv.WriteHeader<SolanaLog>();
-            csv.NextRecord();
+            await csv.NextRecordAsync();
         }
 
         csv.WriteRecord(data);
-        csv.NextRecord();
+        await csv.NextRecordAsync();
     }
 }
 

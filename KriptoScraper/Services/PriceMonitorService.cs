@@ -1,21 +1,15 @@
 ﻿using KriptoScraper.Interfaces;
 
-public class PriceMonitorService : IPriceMonitorService
+public class PriceMonitorService(
+    ILoggerService logger) : IPriceMonitorService
 {
     private DateTime? lastLoggedSecond = null;
     private decimal? lastLoggedPrice = null;
     private decimal? latestSeenPriceInThisSecond = null;
 
-    private readonly ILoggerService _logger;
-
-    public PriceMonitorService(ILoggerService logger)
-    {
-        _logger = logger;
-    }
-
     public async Task MonitorPriceAsync(string symbol, decimal price)
     {
-        var now = DateTime.UtcNow; // Global time kullanımı
+        var now = DateTime.UtcNow; 
         var currentSecond = new DateTime(now.Year, now.Month, now.Day, now.Hour, now.Minute, now.Second);
 
         // Fiyatın yeni bir saniyeye geçtiği durum
@@ -25,17 +19,17 @@ public class PriceMonitorService : IPriceMonitorService
             lastLoggedPrice = price;
             latestSeenPriceInThisSecond = price;
 
-            await _logger.LogAsync(symbol, now, price);
+            await logger.LogAsync(symbol, now, price);
             return;
         }
 
         // Fiyat değişmişse ama küçük değişiklikler önlenmişse
-        if (Math.Abs(price - latestSeenPriceInThisSecond.Value) >= 0.001m)
+        if (Math.Abs(price - latestSeenPriceInThisSecond!.Value) >= 0.001m)
         {
             latestSeenPriceInThisSecond = price;
             lastLoggedPrice = price;
 
-            await _logger.LogAsync(symbol, now, price);
+            await logger.LogAsync(symbol, now, price);
         }
     }
 }
