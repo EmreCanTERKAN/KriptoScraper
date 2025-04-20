@@ -1,4 +1,4 @@
-﻿using KriptoScraper.Interfaces;
+﻿using KriptoScraper.Interfaces.DataStorage;
 using KriptoScraper.Models;
 
 namespace KriptoScraper.Services;

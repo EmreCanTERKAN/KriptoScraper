@@ -1,10 +1,11 @@
 ﻿using CsvHelper.Configuration.Attributes;
 
-namespace KriptoScraper.LogInfos;
-public class SolanaLog
+namespace KriptoScraper.Models;
+public abstract class CryptoLog
 {
     [Name("Zaman")]
     public DateTime Timestamp { get; set; }
+
     [Name("Fiyat")]
     public decimal Price { get; set; }
 
@@ -12,5 +13,4 @@ public class SolanaLog
     {
         return $"{Timestamp:dd-MM-yyyy HH:mm:ss} - {Price} USD";
     }
-
 }

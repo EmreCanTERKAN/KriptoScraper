@@ -1,6 +1,5 @@
 ﻿using Binance.Net.Clients;
-using KriptoScraper.Interfaces;
-using KriptoScraper.LogInfos;
+using KriptoScraper.Interfaces.Tracking;
 
 namespace KriptoScraper.BinanceTrackers;
 public class BinanceTracker<TLog>(

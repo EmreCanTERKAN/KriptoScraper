@@ -1,6 +1,8 @@
 ﻿using KriptoScraper.BinanceTrackers;
-using KriptoScraper.Interfaces;
-using KriptoScraper.LogInfos;
+using KriptoScraper.Interfaces.DataStorage;
+using KriptoScraper.Interfaces.Logging;
+using KriptoScraper.Interfaces.Tracking;
+using KriptoScraper.Models;
 using KriptoScraper.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;

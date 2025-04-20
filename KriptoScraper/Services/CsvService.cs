@@ -1,6 +1,5 @@
 ﻿using CsvHelper;
-using KriptoScraper.Interfaces;
-using KriptoScraper.LogInfos;
+using KriptoScraper.Interfaces.DataStorage;
 using System.Globalization;
 
 namespace KriptoScraper.Services;
@@ -20,7 +19,7 @@ public class CsvService : ICsvService
             csv.WriteHeader<T>();
             await csv.NextRecordAsync();
         }
-        
+
         csv.WriteRecord(data);
         await csv.NextRecordAsync();
     }

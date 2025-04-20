@@ -1,4 +1,5 @@
-﻿using KriptoScraper.Interfaces;
+﻿using KriptoScraper.Interfaces.Logging;
+using KriptoScraper.Interfaces.Tracking;
 
 public class PriceMonitorService<TLog>(
     ILoggerService<TLog> logger,

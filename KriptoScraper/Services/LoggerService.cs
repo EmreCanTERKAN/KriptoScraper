@@ -1,4 +1,5 @@
-﻿using KriptoScraper.Interfaces;
+﻿using KriptoScraper.Interfaces.DataStorage;
+using KriptoScraper.Interfaces.Logging;
 
 namespace KriptoScraper.Services;
 public class LoggerService<T>(
@@ -6,7 +7,7 @@ public class LoggerService<T>(
 {
     public async Task LogAsync(string symbol, DateTime time, T data)
     {
-        Console.WriteLine($"{time:yyyy-MM-dd HH:mm:ss} - 📈 {symbol} Log Verisi: {data!.ToString()} $");
+        Console.WriteLine($"📈 {symbol} Log Verisi: {data!.ToString()} $");
 
         var folder = Path.Combine("logs", typeof(T).Name.ToLower());
         Directory.CreateDirectory(folder);
