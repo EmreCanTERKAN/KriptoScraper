@@ -1,5 +1,5 @@
 ﻿namespace KriptoScraper.Interfaces;
-public interface IBinanceSolanaTracker
+public interface IBinanceTracker<TLog>
 {
     Task StartAsync();
 }

@@ -1,5 +1,6 @@
 ﻿using KriptoScraper;
 using KriptoScraper.Interfaces;
+using KriptoScraper.LogInfos;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -12,8 +13,9 @@ var host = Host
 
 Console.WriteLine("🔁 Solana takip otomasyonu başlatıldı.");
 
-var tracker = host.Services.GetRequiredService<IBinanceSolanaTracker>();
+var solanaTracker = host.Services.GetRequiredService<IBinanceTracker<SolanaLog>>();
+var ethereumTracker = host.Services.GetRequiredService<IBinanceTracker<EthereumLog>>();
 
-await tracker.StartAsync();
-
+await solanaTracker.StartAsync();
+await ethereumTracker.StartAsync();
 Console.ReadLine();

@@ -1,7 +1,7 @@
 ﻿using CsvHelper.Configuration.Attributes;
 
 namespace KriptoScraper.LogInfos;
-public class SolanaLog
+public class EthereumLog
 {
     [Name("Zaman")]
     public DateTime Timestamp { get; set; }
@@ -12,5 +12,4 @@ public class SolanaLog
     {
         return $"{Timestamp:dd-MM-yyyy HH:mm:ss} - {Price} USD";
     }
-
 }

@@ -1,10 +1,11 @@
 ﻿using Binance.Net.Clients;
 using KriptoScraper.Interfaces;
+using KriptoScraper.LogInfos;
 
 namespace KriptoScraper.BinanceTrackers;
-public class BinanceSolanaTracker(
-    IPriceMonitorService priceMonitorService,
-    string symbol) : IBinanceSolanaTracker
+public class BinanceTracker<TLog>(
+    IPriceMonitorService<TLog> priceMonitorService,
+    string symbol) : IBinanceTracker<TLog>
 {
     public async Task StartAsync()
     {
@@ -12,10 +13,10 @@ public class BinanceSolanaTracker(
 
         var result = await socketClient.SpotApi.ExchangeData.SubscribeToTickerUpdatesAsync(symbol, async data =>
         {
-            var now = DateTime.Now;
-            var price = data.Data.LastPrice;
 
+            var price = data.Data.LastPrice;
             await priceMonitorService.MonitorPriceAsync(symbol, price);
+
         });
 
         if (!result.Success)

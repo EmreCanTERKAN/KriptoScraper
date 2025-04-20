@@ -1,5 +1,5 @@
 ﻿namespace KriptoScraper.Interfaces;
-public interface ILoggerService
+public interface ILoggerService<T>
 {
-    Task LogAsync(string symbol, DateTime time, decimal price);
+    Task LogAsync(string symbol, DateTime time, T data);
 }

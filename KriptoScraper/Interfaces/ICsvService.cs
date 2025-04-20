@@ -3,5 +3,5 @@
 namespace KriptoScraper.Interfaces;
 public interface ICsvService
 {
-    Task WriteToCsvAsync(SolanaLog data, string filePath);
+    Task WriteToCsvAsync<T>(T data, string filePath);
 }
