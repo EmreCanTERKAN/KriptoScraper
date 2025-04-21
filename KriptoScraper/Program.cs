@@ -1,21 +1,23 @@
-﻿using KriptoScraper;
+﻿using KriptoScraper.Interfaces.DataStorage;
 using KriptoScraper.Interfaces.Tracking;
-using KriptoScraper.Models;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+using KriptoScraper.Services.DataStorage;
+using KriptoScraper.Services.Tracking;
 
 Console.OutputEncoding = System.Text.Encoding.UTF8;
 
-var host = Host
-    .CreateDefaultBuilder(args)
-    .ConfigureServices(DependencyInjection.ConfigureServices)
-    .Build();
+var symbol = "BTCUSDT";
 
-Console.WriteLine("🔁 Kripto Para takip otomasyonu başlatıldı.");
+var directory = "logs";
 
-var solanaTracker = host.Services.GetRequiredService<IBinanceTracker<SolanaLog>>();
-var ethereumTracker = host.Services.GetRequiredService<IBinanceTracker<EthereumLog>>();
+Directory.CreateDirectory(directory);
 
-await solanaTracker.StartAsync();
-await ethereumTracker.StartAsync();
+var filePath = Path.Combine(directory, "btc_trades.csv");
+
+IBinanceWebSocketClient webSocketClient = new BinanceWebSocketClient();
+ITradeEventWriter writer = new CsvTradeEventWriter(filePath);
+
+var logger = new TradeLoggerService(webSocketClient, writer);
+
+await logger.StartLoggingAsync(symbol);
+
 Console.ReadLine();
