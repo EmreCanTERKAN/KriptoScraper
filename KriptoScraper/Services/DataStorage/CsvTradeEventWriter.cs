@@ -2,6 +2,7 @@
 using CsvHelper.Configuration;
 using KriptoScraper.Dtos;
 using KriptoScraper.Interfaces.DataStorage;
+using KriptoScraper.Mapping;
 using System.Globalization;
 using System.Text;
 
@@ -30,6 +31,8 @@ public class CsvTradeEventWriter : ITradeEventWriter
             {
                 HasHeaderRecord = !_headerWritten && !fileExists,
             });
+
+            csv.Context.RegisterClassMap<TradeEventDtoMap>();
 
             if (!_headerWritten && !fileExists)
             {
