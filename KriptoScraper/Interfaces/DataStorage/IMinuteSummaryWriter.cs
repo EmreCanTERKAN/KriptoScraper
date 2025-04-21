@@ -1,7 +1,7 @@
 ﻿using KriptoScraper.Models;
 
 namespace KriptoScraper.Interfaces.DataStorage;
-public interface ITradeEventWriter
+public interface IMinuteSummaryWriter
 {
-    Task WriteAsync(TradeEvent tradeEvent);
+    Task WriteAsync(MinuteSummary summary);
 }

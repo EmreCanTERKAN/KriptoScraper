@@ -1,11 +1,11 @@
 ﻿using Binance.Net.Clients;
-using KriptoScraper.Dtos;
 using KriptoScraper.Interfaces.Tracking;
+using KriptoScraper.Models;
 
 namespace KriptoScraper.Services.Tracking;
 public class BinanceWebSocketClient : IBinanceWebSocketClient
 {
-    public async Task SubscribeToTradeEventsAsync(string symbol, Func<TradeEventDto, Task> onMessage)
+    public async Task SubscribeToTradeEventsAsync(string symbol, Func<TradeEvent, Task> onMessage)
     {
         var socketClient = new BinanceSocketClient();
 
@@ -13,7 +13,7 @@ public class BinanceWebSocketClient : IBinanceWebSocketClient
         {
             var data = msg.Data;
 
-            var tradeEvent = new TradeEventDto(
+            var tradeEvent = new TradeEvent(
                 Symbol: data.Symbol,
                 Price: data.Price,
                 Quantity: data.Quantity,

@@ -1,4 +1,4 @@
-﻿using KriptoScraper.Dtos;
+﻿using KriptoScraper.Models;
 using KriptoScraper.Services.DataStorage;
 
 public class CsvTradeEventWriterTests
@@ -11,7 +11,7 @@ public class CsvTradeEventWriterTests
         if (File.Exists(testFilePath))
             File.Delete(testFilePath);
 
-        var tradeEvent = new TradeEventDto(
+        var tradeEvent = new TradeEvent(
             Symbol: "BTCUSDT",
             Price: 12345.67m,
             Quantity: 0.01m,

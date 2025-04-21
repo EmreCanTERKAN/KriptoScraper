@@ -1,8 +1,8 @@
 ﻿using CsvHelper;
 using CsvHelper.Configuration;
-using KriptoScraper.Dtos;
 using KriptoScraper.Interfaces.DataStorage;
 using KriptoScraper.Mapping;
+using KriptoScraper.Models;
 using System.Globalization;
 using System.Text;
 
@@ -18,7 +18,7 @@ public class CsvTradeEventWriter : ITradeEventWriter
         _filePath = filePath;
     }
 
-    public async Task WriteAsync(TradeEventDto tradeEvent)
+    public async Task WriteAsync(TradeEvent tradeEvent)
     {
         await _lock.WaitAsync();
         try
@@ -36,7 +36,7 @@ public class CsvTradeEventWriter : ITradeEventWriter
 
             if (!_headerWritten && !fileExists)
             {
-                csv.WriteHeader<TradeEventDto>();
+                csv.WriteHeader<TradeEvent>();
                 await csv.NextRecordAsync();
                 _headerWritten = true;
             }

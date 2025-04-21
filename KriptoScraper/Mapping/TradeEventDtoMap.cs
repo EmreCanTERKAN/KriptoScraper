@@ -1,10 +1,10 @@
 ﻿using CsvHelper.Configuration;
-using KriptoScraper.Dtos;
+using KriptoScraper.Models;
 using System.Globalization;
 
 namespace KriptoScraper.Mapping;
 
-public class TradeEventDtoMap : ClassMap<TradeEventDto>
+public class TradeEventDtoMap : ClassMap<TradeEvent>
 {
     public TradeEventDtoMap()
     {
