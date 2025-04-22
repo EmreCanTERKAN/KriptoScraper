@@ -1,26 +1,40 @@
-﻿using KriptoScraper.Interfaces.DataStorage;
-using KriptoScraper.Interfaces.Tracking;
+﻿using KriptoScraper.Application.Interfaces;
+using KriptoScraper.Application.Services;
+using KriptoScraper.Domain.Entities;
+using KriptoScraper.Domain.Interfaces;
+using KriptoScraper.Domain.Services;
+using KriptoScraper.Infrastructure.Services;
+using KriptoScraper.Interfaces.DataStorage;
 using KriptoScraper.Services.DataStorage;
-using KriptoScraper.Services.Tracking;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
-Console.OutputEncoding = System.Text.Encoding.UTF8;
+var host = Host.CreateDefaultBuilder(args)
+    .ConfigureServices((context, services) =>
+    {
+        // Config
+        string tradeLogFilePath = "trades.csv";
+        string summaryLogFilePath = "minute_summary.csv";
 
-var symbol = "BTCUSDT";
-var directory = "logs";
+        // Domain & Application Services
+        services.AddSingleton<ITradeBuffer, TradeBuffer>();
+        services.AddSingleton<ITradeEventHandler, TradeEventHandler>();
+        services.AddSingleton<ITradeAggregator<MinuteSummary>, MinuteTradeAggregator>(); // uygulamaya özel
+        services.AddSingleton<ISummaryWriter<MinuteSummary>>(new CsvSummaryWriter<MinuteSummary>(summaryLogFilePath));
+        services.AddSingleton<ITradeAggregatorService, TradeAggregatorService<MinuteSummary>>();
 
-Directory.CreateDirectory(directory);
-var filePath = Path.Combine(directory, "btc_trades.csv");
+        // Infrastructure
+        services.AddSingleton<ITradeEventWriter>(new CsvTradeEventWriter(tradeLogFilePath));
+        services.AddSingleton<IBinanceWebSocketClient, BinanceWebSocketClient>();
 
-IBinanceWebSocketClient webSocketClient = new BinanceWebSocketClient();
-ITradeEventWriter tradeEventWriter = new CsvTradeEventWriter(filePath);
+        // App-specific service
+        services.AddSingleton<TradeLoggerService>();
+    })
+    .Build();
 
-IMinuteSummaryWriter minuteSummaryWriter = new MinuteSummaryWriter("logs/minute_summary.csv");
-ITradeBuffer tradeBuffer = new TradeBuffer();
-ITradeAggregator tradeAggregator = new TradeAggregator();
-ITradeAggregatorService tradeAggregatorService = new TradeAggregatorService(tradeBuffer, tradeAggregator, minuteSummaryWriter, TimeSpan.FromMinutes(1));
+// Resolve logger and start the app
+var loggerService = host.Services.GetRequiredService<TradeLoggerService>();
+await loggerService.StartLoggingAsync("BTCUSDT");
 
-var logger = new TradeLoggerService(webSocketClient, tradeEventWriter, tradeAggregatorService);
-
-await logger.StartLoggingAsync(symbol);
-
+// Keep the app alive
 Console.ReadLine();

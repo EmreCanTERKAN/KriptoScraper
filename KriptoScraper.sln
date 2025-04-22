@@ -3,9 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.13.35931.197
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KriptoScraper", "KriptoScraper\KriptoScraper.csproj", "{27C2E15E-6D7A-42AB-9AA9-CDDE5610F8B8}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KriptoScraper.Tests", "KriptoScraper.Tests\KriptoScraper.Tests.csproj", "{498235C8-6857-4518-A64C-7654E75B8CB3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{3BDAB364-0287-4549-A635-B9E9B3DF5E63}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KriptoScraper.Domain", "KriptoScraper.Domain\KriptoScraper.Domain.csproj", "{935FB6EA-190A-40CD-B1CC-1CFB120BDC4E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KriptoScraper.Application", "KriptoScraper.Application\KriptoScraper.Application.csproj", "{1C63C4C8-10CF-4CF9-B053-3D03661DADAF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KriptoScraper.Infrastructure", "KriptoScraper.Infrastructure\KriptoScraper.Infrastructure.csproj", "{C4F80743-B36F-4DC0-BF53-E3B831D8701E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KriptoScraper.Worker", "KriptoScraper.Worker\KriptoScraper.Worker.csproj", "{5C30D5C7-3E6D-465C-84CC-5C249367FC6B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,17 +23,36 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{27C2E15E-6D7A-42AB-9AA9-CDDE5610F8B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{27C2E15E-6D7A-42AB-9AA9-CDDE5610F8B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{27C2E15E-6D7A-42AB-9AA9-CDDE5610F8B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{27C2E15E-6D7A-42AB-9AA9-CDDE5610F8B8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{498235C8-6857-4518-A64C-7654E75B8CB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{498235C8-6857-4518-A64C-7654E75B8CB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{498235C8-6857-4518-A64C-7654E75B8CB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{498235C8-6857-4518-A64C-7654E75B8CB3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{935FB6EA-190A-40CD-B1CC-1CFB120BDC4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{935FB6EA-190A-40CD-B1CC-1CFB120BDC4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{935FB6EA-190A-40CD-B1CC-1CFB120BDC4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{935FB6EA-190A-40CD-B1CC-1CFB120BDC4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C63C4C8-10CF-4CF9-B053-3D03661DADAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C63C4C8-10CF-4CF9-B053-3D03661DADAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C63C4C8-10CF-4CF9-B053-3D03661DADAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C63C4C8-10CF-4CF9-B053-3D03661DADAF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C4F80743-B36F-4DC0-BF53-E3B831D8701E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4F80743-B36F-4DC0-BF53-E3B831D8701E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4F80743-B36F-4DC0-BF53-E3B831D8701E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4F80743-B36F-4DC0-BF53-E3B831D8701E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C30D5C7-3E6D-465C-84CC-5C249367FC6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C30D5C7-3E6D-465C-84CC-5C249367FC6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C30D5C7-3E6D-465C-84CC-5C249367FC6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C30D5C7-3E6D-465C-84CC-5C249367FC6B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{498235C8-6857-4518-A64C-7654E75B8CB3} = {3BDAB364-0287-4549-A635-B9E9B3DF5E63}
+		{935FB6EA-190A-40CD-B1CC-1CFB120BDC4E} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{1C63C4C8-10CF-4CF9-B053-3D03661DADAF} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{C4F80743-B36F-4DC0-BF53-E3B831D8701E} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{5C30D5C7-3E6D-465C-84CC-5C249367FC6B} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4508CF3F-2E50-46C3-99D7-1D2B64F53B78}
