@@ -1,20 +1,19 @@
 using KriptoScraper.Application.Services;
+using KriptoScraper.Interfaces.DataStorage;
 
 namespace KriptoScraper.Worker;
 
-public class Worker : BackgroundService
+public class Worker(
+    TradeLoggerService loggerService,
+    ITradeAggregatorService tradeAggregatorService,
+    IConfiguration config) : BackgroundService
 {
-    private readonly TradeLoggerService _loggerService;
-    private readonly string _symbol;
-    public Worker(TradeLoggerService loggerService, IConfiguration config)
-    {
-        _loggerService = loggerService;
-        _symbol = config.GetValue<string>("TradeSettings:Symbol")!;
-    }
+    private readonly string _symbol = config.GetValue<string>("TradeSettings:Symbol")!;
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        await _loggerService.StartLoggingAsync(_symbol);
+        await tradeAggregatorService.StartAsync(stoppingToken);
+        await loggerService.StartLoggingAsync(_symbol);
     }
 }
 

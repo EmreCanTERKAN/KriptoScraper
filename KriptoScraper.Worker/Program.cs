@@ -19,8 +19,8 @@ var host = Host.CreateDefaultBuilder(args)
 
         // Configuration
         string symbol = config.GetValue<string>("TradeSettings:Symbol")!;
-        const string TradeLogFileName = "trades.csv";
-        const string SummaryLogFileName = "minute_summary.csv";
+        string TradeLogFileName = $"logs/{symbol}/{symbol}_trades.csv";
+        string SummaryLogFileName = $"{symbol}/{symbol}_minute_summary.csv";
         var aggregationInterval = TimeSpan.FromMinutes(1);
 
         // Domain Layer

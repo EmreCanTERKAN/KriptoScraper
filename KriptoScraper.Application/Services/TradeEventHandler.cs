@@ -9,7 +9,7 @@ public class TradeEventHandler(
 {
     public async Task HandleAsync(TradeEvent tradeEvent)
     {
-        aggregatorService.AddTrade(tradeEvent); // Domain servisine gönder
-        await writer.WriteAsync(tradeEvent);    // Infrastructure’a yaz
+        aggregatorService.AddTrade(tradeEvent);
+        await writer.WriteAsync(tradeEvent);
     }
 }

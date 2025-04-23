@@ -10,12 +10,18 @@ namespace KriptoScraper.Infrastructure.Services;
 public class CsvTradeEventWriter : ITradeEventWriter
 {
     private readonly string _filePath;
-    private readonly SemaphoreSlim _lock = new(1, 1);
+    private readonly SemaphoreSlim _lock = new(1, 1); // aynı anda sadece bir iş parçacığına izin verir.
     private bool _headerWritten = false;
 
     public CsvTradeEventWriter(string filePath)
     {
         _filePath = filePath;
+
+        var directory = Path.GetDirectoryName(_filePath);
+        if (directory != null && !Directory.Exists(directory))
+        {
+            Directory.CreateDirectory(directory);
+        }
     }
 
     public async Task WriteAsync(TradeEvent tradeEvent)
