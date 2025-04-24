@@ -3,6 +3,7 @@ using KriptoScraper.Application.Services;
 using KriptoScraper.Domain.Entities;
 using KriptoScraper.Domain.Interfaces;
 using KriptoScraper.Domain.Services;
+using KriptoScraper.Infrastructure.Interfaces;
 using KriptoScraper.Infrastructure.Services;
 using KriptoScraper.Interfaces.DataStorage;
 using KriptoScraper.Services.DataStorage;
@@ -26,11 +27,19 @@ var host = Host.CreateDefaultBuilder(args)
         // Domain Layer
         services.AddSingleton<ITradeBuffer, TradeBuffer>();
         services.AddSingleton<ITradeAggregator<MinuteSummary>, MinuteTradeAggregator>();
+        services.AddSingleton<ISymbolProvider, AppSettingsSymbolProvider>();
 
         // Infrastructure Layer
         services.AddSingleton<ITradeEventWriter>(new CsvTradeEventWriter(TradeLogFileName));
-        services.AddSingleton<ISummaryWriter<MinuteSummary>>(new CsvSummaryWriter<MinuteSummary>(SummaryLogFileName));
+        services.AddSingleton<ISummaryWriter<MinuteSummary>>(provider =>
+            new CsvSummaryWriter<MinuteSummary>(
+                provider.GetRequiredService<ILogFilePathProvider>(),
+                symbol: config["TradeSettings:Symbol"]!,
+                interval: "1m"
+            ));
+
         services.AddSingleton<IBinanceWebSocketClient, BinanceWebSocketClient>();
+
 
         // Application Layer
         services.AddSingleton<ITradeAggregatorService>(provider =>
@@ -42,6 +51,7 @@ var host = Host.CreateDefaultBuilder(args)
             ));
         services.AddSingleton<ITradeEventHandler, TradeEventHandler>();
         services.AddSingleton<TradeLoggerService>();
+        services.AddSingleton<ISummaryFilePathProvider, SummaryFilePathProvider>();
 
         // UI Layer (Worker)
         services.AddHostedService<Worker>();

@@ -16,8 +16,4 @@
     <ProjectReference Include="..\KriptoScraper.Domain\KriptoScraper.Domain.csproj" />
     <ProjectReference Include="..\KriptoScraper.Infrastructure\KriptoScraper.Infrastructure.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="logs\" />
-  </ItemGroup>
 </Project>

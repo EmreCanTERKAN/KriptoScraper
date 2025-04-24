@@ -1,16 +1,28 @@
-﻿using KriptoScraper.Application.Interfaces;
+﻿using KriptoScraper.Application.Configurations;
+using KriptoScraper.Application.Interfaces;
 using KriptoScraper.Domain.Interfaces;
+using Microsoft.Extensions.Options;
 
 namespace KriptoScraper.Application.Services;
 public class TradeLoggerService(
     IBinanceWebSocketClient webSocketClient,
-    ITradeEventHandler tradeEventHandler) // Writer ve Aggregator yerine tek bir handler
+    ITradeEventHandler tradeEventHandler,
+    IOptions<TradeSettings> settings) : ITradeLoggerService
 {
-    public async Task StartLoggingAsync(string symbol)
+    public async Task StartLoggingAsync()
     {
-        await webSocketClient.SubscribeToTradeEventsAsync(symbol, async tradeEvent =>
+        var pairs = settings.Value.Pairs;
+
+        var tasks = pairs.Select(pair => Task.Run(async () =>
         {
-            await tradeEventHandler.HandleAsync(tradeEvent); // Tüm iş bu handler’a gider
-        });
+            // WebSocket aboneliği başlatılıyor ve işlem bekleniyor
+            await webSocketClient.SubscribeToTradeEventsAsync(pair.Symbol, pair.Timeframe, async tradeEvent =>
+            {
+                await tradeEventHandler.HandleAsync(tradeEvent); // Veri işleme
+            });
+        })).ToList();
+
+        // Tüm görevlerin tamamlanmasını bekleyelim
+        await Task.WhenAll(tasks);
     }
 }

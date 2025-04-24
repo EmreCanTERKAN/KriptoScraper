@@ -1,7 +1,7 @@
 ﻿using KriptoScraper.Domain.Entities;
 
-namespace KriptoScraper.Interfaces.DataStorage;
+namespace KriptoScraper.Application.Interfaces;
 public interface ITradeEventWriter
 {
-    Task WriteAsync(TradeEvent tradeEvent);
+    Task WriteAsync(string symbol, string interval, TradeEvent tradeEvent);
 }

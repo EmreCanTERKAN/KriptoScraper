@@ -1,50 +1,47 @@
 ﻿using CsvHelper;
 using CsvHelper.Configuration;
+using KriptoScraper.Application.Interfaces;
 using KriptoScraper.Domain.Entities;
+using KriptoScraper.Infrastructure.Interfaces;
 using KriptoScraper.Infrastructure.Mappings;
-using KriptoScraper.Interfaces.DataStorage;
 using System.Globalization;
 using System.Text;
 
 namespace KriptoScraper.Infrastructure.Services;
 public class CsvTradeEventWriter : ITradeEventWriter
 {
-    private readonly string _filePath;
-    private readonly SemaphoreSlim _lock = new(1, 1); // aynı anda sadece bir iş parçacığına izin verir.
-    private bool _headerWritten = false;
+    private readonly ILogFilePathProvider _logFilePathProvider;
+    private readonly SemaphoreSlim _lock = new(1, 1);
 
-    public CsvTradeEventWriter(string filePath)
+    public CsvTradeEventWriter(ILogFilePathProvider logFilePathProvider)
     {
-        _filePath = filePath;
-
-        var directory = Path.GetDirectoryName(_filePath);
-        if (directory != null && !Directory.Exists(directory))
-        {
-            Directory.CreateDirectory(directory);
-        }
+        _logFilePathProvider = logFilePathProvider;
     }
 
-    public async Task WriteAsync(TradeEvent tradeEvent)
+    public async Task WriteAsync(string symbol, string interval, TradeEvent tradeEvent)
     {
+        var filePath = _logFilePathProvider.GetPath(symbol, interval, "trades");
+        EnsureDirectoryExists(filePath);
+
         await _lock.WaitAsync();
         try
         {
-            var fileExists = File.Exists(_filePath);
+            var fileExists = File.Exists(filePath);
 
-            using var stream = File.Open(_filePath, FileMode.Append, FileAccess.Write, FileShare.Read);
-            using var writer = new StreamWriter(stream, Encoding.UTF8);
+            await using var stream = File.Open(filePath, FileMode.Append, FileAccess.Write, FileShare.Read);
+            await using var writer = new StreamWriter(stream, Encoding.UTF8);
             using var csv = new CsvWriter(writer, new CsvConfiguration(CultureInfo.InvariantCulture)
             {
-                HasHeaderRecord = !_headerWritten && !fileExists,
+                HasHeaderRecord = !fileExists,
+                ShouldQuote = _ => true
             });
 
             csv.Context.RegisterClassMap<TradeEventMap>();
 
-            if (!_headerWritten && !fileExists)
+            if (!fileExists)
             {
                 csv.WriteHeader<TradeEvent>();
                 await csv.NextRecordAsync();
-                _headerWritten = true;
             }
 
             csv.WriteRecord(tradeEvent);
@@ -55,4 +52,16 @@ public class CsvTradeEventWriter : ITradeEventWriter
             _lock.Release();
         }
     }
+
+    private static void EnsureDirectoryExists(string filePath)
+    {
+        var directory = Path.GetDirectoryName(filePath);
+        if (!string.IsNullOrWhiteSpace(directory) && !Directory.Exists(directory))
+        {
+            Directory.CreateDirectory(directory);
+        }
+    }
 }
+
+
+

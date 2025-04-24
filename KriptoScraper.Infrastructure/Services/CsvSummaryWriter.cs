@@ -2,40 +2,37 @@
 using CsvHelper.Configuration;
 using KriptoScraper.Application.Interfaces;
 using KriptoScraper.Domain.Interfaces;
+using KriptoScraper.Infrastructure.Interfaces;
 using System.Globalization;
 
 namespace KriptoScraper.Infrastructure.Services;
 
-public class CsvSummaryWriter<T> : ISummaryWriter<T>
-    where T : ISummary
+public class CsvSummaryWriter<T> : ISummaryWriter<T> where T : ISummary
 {
-    private readonly string _filePath;
+    private readonly ILogFilePathProvider _pathProvider;
+    private readonly string _symbol;
+    private readonly string _interval;
     private readonly CsvConfiguration _csvConfig;
 
-    public CsvSummaryWriter(string fileName)
+    public CsvSummaryWriter(ILogFilePathProvider pathProvider, string symbol, string interval)
     {
-        var logDirectory = Path.Combine(Directory.GetCurrentDirectory(), "logs");
-
-        if (!Directory.Exists(logDirectory))
-        {
-            Directory.CreateDirectory(logDirectory);
-        }
-
-        var cleanFileName = Path.GetFileName(fileName);
-        _filePath = Path.Combine(logDirectory, cleanFileName);
+        _pathProvider = pathProvider;
+        _symbol = symbol;
+        _interval = interval;
 
         _csvConfig = new CsvConfiguration(CultureInfo.InvariantCulture)
         {
             HasHeaderRecord = true,
-            ShouldQuote = args => true
+            ShouldQuote = _ => true
         };
     }
 
     public async Task WriteAsync(T summary)
     {
-        var fileExists = File.Exists(_filePath);
+        var filePath = _pathProvider.GetPath(_symbol, _interval, "summary");
+        var fileExists = File.Exists(filePath);
 
-        using var stream = File.Open(_filePath, FileMode.Append, FileAccess.Write, FileShare.Read);
+        using var stream = File.Open(filePath, FileMode.Append, FileAccess.Write, FileShare.Read);
         using var writer = new StreamWriter(stream);
         using var csv = new CsvWriter(writer, _csvConfig);
 
@@ -49,6 +46,7 @@ public class CsvSummaryWriter<T> : ISummaryWriter<T>
         await csv.NextRecordAsync();
     }
 }
+
 
 
 
