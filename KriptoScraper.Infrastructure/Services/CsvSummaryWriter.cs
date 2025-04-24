@@ -1,4 +1,5 @@
-﻿using CsvHelper;
+﻿using CryptoExchange.Net.CommonObjects;
+using CsvHelper;
 using CsvHelper.Configuration;
 using KriptoScraper.Application.Interfaces;
 using KriptoScraper.Domain.Interfaces;
@@ -27,9 +28,11 @@ public class CsvSummaryWriter<T> : ISummaryWriter<T> where T : ISummary
         };
     }
 
+
+
     public async Task WriteAsync(T summary)
     {
-        var filePath = _pathProvider.GetPath(_symbol, _interval, "summary");
+
         var fileExists = File.Exists(filePath);
 
         using var stream = File.Open(filePath, FileMode.Append, FileAccess.Write, FileShare.Read);
@@ -44,6 +47,28 @@ public class CsvSummaryWriter<T> : ISummaryWriter<T> where T : ISummary
 
         csv.WriteRecord(summary);
         await csv.NextRecordAsync();
+    }
+
+    public async Task WriteBatchAsync(IEnumerable<T> summaries, CancellationToken cancellationToken = default)
+    {
+        var filePath = _pathProvider.GetPath(_symbol, _interval, "trades");
+
+        var summaryList = summaries.ToList();
+
+        if (!summaryList.Any()) 
+            return;
+
+        var fileExist = File.Exists(filePath);
+
+    }
+
+    private static void EnsureDirectoryExists(string filePath)
+    {
+        var directory = Path.GetDirectoryName(filePath);
+        if (!string.IsNullOrWhiteSpace(directory) && !Directory.Exists(directory))
+        {
+            Directory.CreateDirectory(directory);
+        }
     }
 }
 

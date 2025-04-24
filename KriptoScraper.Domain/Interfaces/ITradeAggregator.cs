@@ -3,5 +3,5 @@
 namespace KriptoScraper.Domain.Interfaces;
 public interface ITradeAggregator<TSummary>
 {
-    List<TSummary> Aggregate(List<TradeEvent> trades);
+    IEnumerable<TSummary> Aggregate(IEnumerable<TradeEvent> trades);
 }

@@ -16,4 +16,8 @@
     <ProjectReference Include="..\KriptoScraper.Domain\KriptoScraper.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Interfaces\" />
+  </ItemGroup>
+
 </Project>
