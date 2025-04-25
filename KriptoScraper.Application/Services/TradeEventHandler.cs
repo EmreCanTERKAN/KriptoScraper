@@ -10,6 +10,6 @@ public class TradeEventHandler(
     public async Task HandleAsync(TradeEvent tradeEvent)
     {
         aggregatorService.AddTrade(tradeEvent);
-        await writer.WriteAsync(tradeEvent.Symbol,tradeEvent.TimeFrame.ToString(),tradeEvent);
+        await writer.WriteAsync(tradeEvent.Symbol, tradeEvent.TimeFrame.ToString(), tradeEvent);
     }
 }

@@ -3,6 +3,7 @@ using KriptoScraper.Domain.Entities;
 using KriptoScraper.Domain.Interfaces;
 using KriptoScraper.Interfaces.DataStorage;
 
+namespace KriptoScraper.Application.Services;
 public class TradeAggregatorService<TSummary>(
     ITradeBuffer buffer,
     ITradeAggregator<TSummary> aggregator,
@@ -19,14 +20,14 @@ public class TradeAggregatorService<TSummary>(
         {
             if (!cancellationToken.IsCancellationRequested)
             {
-                await AggregateAndWriteAsync();
+                await AggregateAndWriteAsync(cancellationToken);
             }
         }, null, interval, interval);
 
         return Task.CompletedTask;
     }
 
-    private async Task AggregateAndWriteAsync()
+    private async Task AggregateAndWriteAsync(CancellationToken cancellationToken)
     {
         try
         {
@@ -35,10 +36,8 @@ public class TradeAggregatorService<TSummary>(
 
             var summaries = aggregator.Aggregate(trades);
 
-            foreach (var summary in summaries)
-            {
-                await writer.WriteAsync(summary);
-            }
+            await writer.WriteBatchAsync(summaries, cancellationToken);
+
         }
         catch (Exception ex)
         {
@@ -47,10 +46,8 @@ public class TradeAggregatorService<TSummary>(
         }
     }
 
-    public void Dispose()
-    {
-        _timer?.Dispose();
-    }
+    public void Dispose() =>_timer?.Dispose();
+
 }
 
 
