@@ -28,30 +28,10 @@ public class CsvSummaryWriter<T> : ISummaryWriter<T> where T : ISummary
         };
     }
 
-
-
-    public async Task WriteAsync(T summary)
-    {
-
-        var fileExists = File.Exists(filePath);
-
-        using var stream = File.Open(filePath, FileMode.Append, FileAccess.Write, FileShare.Read);
-        using var writer = new StreamWriter(stream);
-        using var csv = new CsvWriter(writer, _csvConfig);
-
-        if (!fileExists)
-        {
-            csv.WriteHeader<T>();
-            await csv.NextRecordAsync();
-        }
-
-        csv.WriteRecord(summary);
-        await csv.NextRecordAsync();
-    }
-
     public async Task WriteBatchAsync(IEnumerable<T> summaries, CancellationToken cancellationToken = default)
     {
         var filePath = _pathProvider.GetPath(_symbol, _interval, "trades");
+        EnsureDirectoryExists(filePath);
 
         var summaryList = summaries.ToList();
 
@@ -59,6 +39,26 @@ public class CsvSummaryWriter<T> : ISummaryWriter<T> where T : ISummary
             return;
 
         var fileExist = File.Exists(filePath);
+
+        using var stream = File.Open(filePath, FileMode.Append, FileAccess.Write, FileShare.Read);
+        using var writer = new StreamWriter(stream);
+        using var csv = new CsvWriter(writer, _csvConfig);
+
+        if (!fileExist)
+        {
+            csv.WriteHeader<T>();
+            await csv.NextRecordAsync();
+        }
+
+        foreach (var summary in summaryList)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            csv.WriteRecord(summary);
+            await csv.NextRecordAsync();
+        }
+
+        await writer.FlushAsync();
+        stream.Flush(true);
 
     }
 
