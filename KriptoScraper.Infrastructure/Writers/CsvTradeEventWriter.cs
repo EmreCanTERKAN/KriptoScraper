@@ -1,13 +1,12 @@
 ﻿using CsvHelper;
 using CsvHelper.Configuration;
-using KriptoScraper.Application.Interfaces;
 using KriptoScraper.Domain.Entities;
-using KriptoScraper.Infrastructure.Interfaces;
-using KriptoScraper.Infrastructure.Mappings;
+using KriptoScraper.Domain.Interfaces;
+using KriptoScraper.Domain.Mappings;
 using System.Globalization;
 using System.Text;
 
-namespace KriptoScraper.Infrastructure.Services;
+namespace KriptoScraper.Infrastructure.Writers;
 public class CsvTradeEventWriter : ITradeEventWriter
 {
     private readonly ILogFilePathProvider _logFilePathProvider;

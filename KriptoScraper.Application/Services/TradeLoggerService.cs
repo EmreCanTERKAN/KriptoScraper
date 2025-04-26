@@ -1,9 +1,8 @@
-﻿using KriptoScraper.Application.Configurations;
-using KriptoScraper.Application.Interfaces;
-using KriptoScraper.Domain.Interfaces;
+﻿using KriptoScraper.Domain.Interfaces;
+using KriptoScraper.Domain.Settings;
 using Microsoft.Extensions.Options;
 
-namespace KriptoScraper.Application.Services;
+namespace KriptoScraper.Domain.Services;
 public class TradeLoggerService(
     IBinanceWebSocketClient webSocketClient,
     ITradeEventHandler tradeEventHandler,

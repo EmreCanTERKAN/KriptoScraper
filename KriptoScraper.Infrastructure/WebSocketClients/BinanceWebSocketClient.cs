@@ -3,7 +3,7 @@ using KriptoScraper.Domain.Entities;
 using KriptoScraper.Domain.Enums;
 using KriptoScraper.Domain.Interfaces;
 
-namespace KriptoScraper.Infrastructure.Services;
+namespace KriptoScraper.Infrastructure.WebSocketClients;
 public class BinanceWebSocketClient : IBinanceWebSocketClient
 {
     public async Task SubscribeToTradeEventsAsync(string symbol, Timeframe timeframe, Func<TradeEvent, Task> onMessage)

@@ -1,6 +1,6 @@
-﻿using KriptoScraper.Infrastructure.Interfaces;
+﻿using KriptoScraper.Domain.Interfaces;
 
-namespace KriptoScraper.Infrastructure.Services;
+namespace KriptoScraper.Domain.Services;
 public class DefaultLogFilePathProvider : ILogFilePathProvider
 {
     public string GetPath(string symbol, string interval, string fileType)

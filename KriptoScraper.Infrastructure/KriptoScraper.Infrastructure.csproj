@@ -9,15 +9,12 @@
   <ItemGroup>
     <PackageReference Include="Binance.Net" Version="10.19.1" />
     <PackageReference Include="CsvHelper" Version="33.0.1" />
+    <PackageReference Include="Scrutor" Version="6.0.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\KriptoScraper.Application\KriptoScraper.Application.csproj" />
     <ProjectReference Include="..\KriptoScraper.Domain\KriptoScraper.Domain.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Interfaces\" />
   </ItemGroup>
 
 </Project>

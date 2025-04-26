@@ -1,12 +1,9 @@
-﻿using CryptoExchange.Net.CommonObjects;
-using CsvHelper;
+﻿using CsvHelper;
 using CsvHelper.Configuration;
-using KriptoScraper.Application.Interfaces;
 using KriptoScraper.Domain.Interfaces;
-using KriptoScraper.Infrastructure.Interfaces;
 using System.Globalization;
 
-namespace KriptoScraper.Infrastructure.Services;
+namespace KriptoScraper.Infrastructure.Writers;
 
 public class CsvSummaryWriter<T> : ISummaryWriter<T> where T : ISummary
 {
@@ -35,7 +32,7 @@ public class CsvSummaryWriter<T> : ISummaryWriter<T> where T : ISummary
 
         var summaryList = summaries.ToList();
 
-        if (!summaryList.Any()) 
+        if (!summaryList.Any())
             return;
 
         var fileExist = File.Exists(filePath);

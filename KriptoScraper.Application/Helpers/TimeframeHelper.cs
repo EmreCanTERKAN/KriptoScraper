@@ -1,4 +1,4 @@
-﻿namespace KriptoScraper.Application.Helpers;
+﻿namespace KriptoScraper.Domain.Helpers;
 public static class TimeframeHelper
 {
     public static TimeSpan ToTimeSpan(this string timeframe)

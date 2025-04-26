@@ -2,7 +2,7 @@
 using KriptoScraper.Domain.Entities;
 using System.Globalization;
 
-namespace KriptoScraper.Infrastructure.Mappings;
+namespace KriptoScraper.Domain.Mappings;
 
 public class TradeEventMap : ClassMap<TradeEvent>
 {

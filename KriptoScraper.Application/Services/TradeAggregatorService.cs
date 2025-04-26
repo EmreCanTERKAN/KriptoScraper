@@ -1,9 +1,7 @@
-﻿using KriptoScraper.Application.Interfaces;
-using KriptoScraper.Domain.Entities;
+﻿using KriptoScraper.Domain.Entities;
 using KriptoScraper.Domain.Interfaces;
-using KriptoScraper.Interfaces.DataStorage;
 
-namespace KriptoScraper.Application.Services;
+namespace KriptoScraper.Domain.Services;
 public class TradeAggregatorService<TSummary>(
     ITradeBuffer buffer,
     ITradeAggregator<TSummary> aggregator,
@@ -46,7 +44,7 @@ public class TradeAggregatorService<TSummary>(
         }
     }
 
-    public void Dispose() =>_timer?.Dispose();
+    public void Dispose() => _timer?.Dispose();
 
 }
 

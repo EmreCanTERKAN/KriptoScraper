@@ -1,6 +1,6 @@
 ﻿using KriptoScraper.Domain.Enums;
 
-namespace KriptoScraper.Application.Configurations;
+namespace KriptoScraper.Domain.Settings;
 public sealed class TradeSettings
 {
     public List<TradePair> Pairs { get; set; } = new();

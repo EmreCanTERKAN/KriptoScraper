@@ -1,7 +1,7 @@
 ﻿using KriptoScraper.Domain.Entities;
-using KriptoScraper.Interfaces.DataStorage;
+using KriptoScraper.Domain.Interfaces;
 
-namespace KriptoScraper.Application.Services;
+namespace KriptoScraper.Domain.Buffers;
 public class TradeBuffer : ITradeBuffer
 {
     private readonly List<TradeEvent> _buffer = new();

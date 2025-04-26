@@ -1,5 +1,4 @@
-using KriptoScraper.Application.Interfaces;
-using KriptoScraper.Interfaces.DataStorage;
+using KriptoScraper.Domain.Interfaces;
 
 namespace KriptoScraper.Worker;
 

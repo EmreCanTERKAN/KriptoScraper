@@ -1,8 +1,7 @@
-﻿using KriptoScraper.Application.Interfaces;
-using KriptoScraper.Domain.Entities;
-using KriptoScraper.Interfaces.DataStorage;
+﻿using KriptoScraper.Domain.Entities;
+using KriptoScraper.Domain.Interfaces;
 
-namespace KriptoScraper.Application.Services;
+namespace KriptoScraper.Domain.Handlers;
 public class TradeEventHandler(
     ITradeAggregatorService aggregatorService,
     ITradeEventWriter writer) : ITradeEventHandler
