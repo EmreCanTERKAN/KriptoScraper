@@ -7,9 +7,9 @@ using KriptoScraper.Infrastructure;
 using KriptoScraper.Worker;
 
 var host = Host.CreateDefaultBuilder(args)
-    .ConfigureServices(services =>
+    .ConfigureServices((ctx,services) =>
     {
-        services.AddInfrastructure();
+        services.AddInfrastructure(ctx.Configuration);
         services.AddHostedService<Worker>();
         services.AddSingleton<ITradeLoggerService, TradeLoggerService>();
         services.AddSingleton<ITradeEventHandler, TradeEventHandler>();
