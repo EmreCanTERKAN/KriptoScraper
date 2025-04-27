@@ -1,5 +1,9 @@
 ﻿namespace KriptoScraper.Domain.Interfaces;
 public interface ILogFilePathProvider
 {
-    string GetPath(string symbol, TimeSpan interval, string fileType); // örn: "SOLUSDT", "1m", "summary"
+    string GetRawTradesPath(string symbol);
+
+    string GetSummariesFolder(string symbol);
+
+    string GetSummaryFilePath(string symbol, TimeSpan interval, DateTime date);
 }

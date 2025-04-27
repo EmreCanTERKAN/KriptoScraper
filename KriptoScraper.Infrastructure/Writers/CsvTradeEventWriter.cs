@@ -20,7 +20,7 @@ public class CsvTradeEventWriter : ITradeEventWriter
 
     public async Task WriteAsync(string symbol, TimeSpan interval, TradeEvent tradeEvent)
     {
-        var filePath = _logFilePathProvider.GetPath(symbol, interval, "trades");
+        var filePath = _logFilePathProvider.GetRawTradesPath(symbol);
         EnsureDirectoryExists(filePath);
 
         await _lock.WaitAsync();

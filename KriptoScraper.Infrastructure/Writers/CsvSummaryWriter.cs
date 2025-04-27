@@ -28,7 +28,8 @@ public class CsvSummaryWriter<T> : ISummaryWriter<T> where T : ISummary
 
     public async Task WriteBatchAsync(IEnumerable<T> summaries, CancellationToken cancellationToken = default)
     {
-        var filePath = _pathProvider.GetPath(_symbol, _interval, "trades");
+        var today = DateTime.UtcNow.Date;
+        var filePath = _pathProvider.GetSummaryFilePath(_symbol, _interval, today);
         EnsureDirectoryExists(filePath);
 
         var summaryList = summaries.ToList();
