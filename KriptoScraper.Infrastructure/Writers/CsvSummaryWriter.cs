@@ -1,5 +1,6 @@
 ﻿using CsvHelper;
 using CsvHelper.Configuration;
+using KriptoScraper.Application.Interfaces;
 using KriptoScraper.Domain.Interfaces;
 using System.Globalization;
 
@@ -9,10 +10,10 @@ public class CsvSummaryWriter<T> : ISummaryWriter<T> where T : ISummary
 {
     private readonly ILogFilePathProvider _pathProvider;
     private readonly string _symbol;
-    private readonly string _interval;
+    private readonly TimeSpan _interval;
     private readonly CsvConfiguration _csvConfig;
 
-    public CsvSummaryWriter(ILogFilePathProvider pathProvider, string symbol, string interval)
+    public CsvSummaryWriter(ILogFilePathProvider pathProvider, string symbol, TimeSpan interval)
     {
         _pathProvider = pathProvider;
         _symbol = symbol;

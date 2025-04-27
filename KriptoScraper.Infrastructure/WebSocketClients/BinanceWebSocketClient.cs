@@ -1,7 +1,7 @@
 ﻿using Binance.Net.Clients;
-using KriptoScraper.Domain.Entities;
+using KriptoScraper.Application.Entities;
+using KriptoScraper.Application.Interfaces;
 using KriptoScraper.Domain.Enums;
-using KriptoScraper.Domain.Interfaces;
 
 namespace KriptoScraper.Infrastructure.WebSocketClients;
 public class BinanceWebSocketClient : IBinanceWebSocketClient

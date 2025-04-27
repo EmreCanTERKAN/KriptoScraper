@@ -1,6 +1,6 @@
-﻿using KriptoScraper.Domain.Interfaces;
+﻿using KriptoScraper.Application.Interfaces;
 
-namespace KriptoScraper.Domain.Entities;
+namespace KriptoScraper.Application.Entities;
 public class MinuteSummary : ISummary
 {
     public DateTime Period { get; set; }

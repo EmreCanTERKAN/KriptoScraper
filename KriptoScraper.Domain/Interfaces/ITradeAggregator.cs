@@ -1,6 +1,6 @@
-﻿using KriptoScraper.Domain.Entities;
+﻿using KriptoScraper.Application.Entities;
 
-namespace KriptoScraper.Domain.Interfaces;
+namespace KriptoScraper.Application.Interfaces;
 public interface ITradeAggregator<TSummary>
 {
     IEnumerable<TSummary> Aggregate(IEnumerable<TradeEvent> trades);

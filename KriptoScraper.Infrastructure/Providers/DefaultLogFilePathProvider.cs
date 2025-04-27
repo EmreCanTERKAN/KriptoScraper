@@ -1,12 +1,13 @@
 ﻿using KriptoScraper.Domain.Interfaces;
 
-namespace KriptoScraper.Domain.Services;
+namespace KriptoScraper.Application.Services;
 public class DefaultLogFilePathProvider : ILogFilePathProvider
 {
-    public string GetPath(string symbol, string interval, string fileType)
+    public string GetPath(string symbol, TimeSpan interval, string fileType)
     {
-        var baseDir = Path.Combine(Directory.GetCurrentDirectory(), "logs", symbol, interval);
+        var intervalDir = $"{interval.Hours:D2}h{interval.Minutes:D2}m";
+        var baseDir = Path.Combine(Directory.GetCurrentDirectory(), "logs", symbol, intervalDir);
         Directory.CreateDirectory(baseDir);
-        return Path.Combine(baseDir, $"{symbol}_{interval}_{fileType}.csv");
+        return Path.Combine(baseDir, $"{symbol}_{intervalDir}_{fileType}.csv");
     }
 }

@@ -1,8 +1,9 @@
 ﻿using CsvHelper;
 using CsvHelper.Configuration;
-using KriptoScraper.Domain.Entities;
+using KriptoScraper.Application.Entities;
+using KriptoScraper.Application.Interfaces;
+using KriptoScraper.Application.Mappings;
 using KriptoScraper.Domain.Interfaces;
-using KriptoScraper.Domain.Mappings;
 using System.Globalization;
 using System.Text;
 
@@ -17,7 +18,7 @@ public class CsvTradeEventWriter : ITradeEventWriter
         _logFilePathProvider = logFilePathProvider;
     }
 
-    public async Task WriteAsync(string symbol, string interval, TradeEvent tradeEvent)
+    public async Task WriteAsync(string symbol, TimeSpan interval, TradeEvent tradeEvent)
     {
         var filePath = _logFilePathProvider.GetPath(symbol, interval, "trades");
         EnsureDirectoryExists(filePath);

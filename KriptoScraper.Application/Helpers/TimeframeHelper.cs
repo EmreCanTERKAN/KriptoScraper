@@ -1,15 +1,15 @@
-﻿namespace KriptoScraper.Domain.Helpers;
+﻿using KriptoScraper.Domain.Enums;
+
+namespace KriptoScraper.Application.Helpers;
 public static class TimeframeHelper
 {
-    public static TimeSpan ToTimeSpan(this string timeframe)
+    public static TimeSpan ToTimeSpan(this Timeframe tf) => tf switch
     {
-        return timeframe switch
-        {
-            "1m" => TimeSpan.FromMinutes(1),
-            "5m" => TimeSpan.FromMinutes(5),
-            "15m" => TimeSpan.FromMinutes(15),
-            "1h" => TimeSpan.FromHours(1),
-            _ => throw new ArgumentException($"Unsupported timeframe: {timeframe}")
-        };
-    }
+        Timeframe.OneMinute => TimeSpan.FromMinutes(1),
+        Timeframe.FiveMinutes => TimeSpan.FromMinutes(5),
+        Timeframe.FifteenMinutes => TimeSpan.FromMinutes(15),
+        Timeframe.OneHour => TimeSpan.FromHours(1),
+        _ => throw new ArgumentOutOfRangeException(nameof(tf), tf, null)
+    };
 }
+

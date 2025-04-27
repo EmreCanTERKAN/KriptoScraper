@@ -1,6 +1,6 @@
 ﻿using KriptoScraper.Domain.Enums;
 
-namespace KriptoScraper.Domain.Entities;
+namespace KriptoScraper.Application.Entities;
 public record TradeEvent(
     string Symbol,
     Timeframe TimeFrame,

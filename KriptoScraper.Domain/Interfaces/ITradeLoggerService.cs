@@ -1,4 +1,4 @@
-﻿namespace KriptoScraper.Domain.Interfaces;
+﻿namespace KriptoScraper.Application.Interfaces;
 public interface ITradeLoggerService
 {
     Task StartLoggingAsync();

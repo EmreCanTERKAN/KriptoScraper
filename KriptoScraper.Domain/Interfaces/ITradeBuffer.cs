@@ -1,6 +1,6 @@
-﻿using KriptoScraper.Domain.Entities;
+﻿using KriptoScraper.Application.Entities;
 
-namespace KriptoScraper.Domain.Interfaces;
+namespace KriptoScraper.Application.Interfaces;
 public interface ITradeBuffer
 {
     void Add(TradeEvent trade);

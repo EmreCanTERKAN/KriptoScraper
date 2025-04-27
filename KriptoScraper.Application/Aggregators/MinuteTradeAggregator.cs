@@ -1,5 +1,5 @@
-﻿using KriptoScraper.Domain.Entities;
-using KriptoScraper.Domain.Interfaces;
+﻿using KriptoScraper.Application.Entities;
+using KriptoScraper.Application.Interfaces;
 
 namespace KriptoScraper.Application.Aggregators;
 public class MinuteTradeAggregator : ITradeAggregator<MinuteSummary>

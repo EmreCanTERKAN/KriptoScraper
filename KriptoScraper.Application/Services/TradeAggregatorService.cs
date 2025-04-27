@@ -1,7 +1,7 @@
-﻿using KriptoScraper.Domain.Entities;
-using KriptoScraper.Domain.Interfaces;
+﻿using KriptoScraper.Application.Entities;
+using KriptoScraper.Application.Interfaces;
 
-namespace KriptoScraper.Domain.Services;
+namespace KriptoScraper.Application.Services;
 public class TradeAggregatorService<TSummary>(
     ITradeBuffer buffer,
     ITradeAggregator<TSummary> aggregator,

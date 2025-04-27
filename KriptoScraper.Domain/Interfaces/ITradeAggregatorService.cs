@@ -1,6 +1,6 @@
-﻿using KriptoScraper.Domain.Entities;
+﻿using KriptoScraper.Application.Entities;
 
-namespace KriptoScraper.Domain.Interfaces;
+namespace KriptoScraper.Application.Interfaces;
 public interface ITradeAggregatorService
 {
     void AddTrade(TradeEvent tradeEvent); // dış dünyadan gelenler buradan girer

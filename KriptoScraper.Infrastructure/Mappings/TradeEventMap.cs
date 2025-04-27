@@ -1,8 +1,8 @@
 ﻿using CsvHelper.Configuration;
-using KriptoScraper.Domain.Entities;
+using KriptoScraper.Application.Entities;
 using System.Globalization;
 
-namespace KriptoScraper.Domain.Mappings;
+namespace KriptoScraper.Application.Mappings;
 
 public class TradeEventMap : ClassMap<TradeEvent>
 {
