@@ -1,4 +1,5 @@
 ﻿using KriptoScraper.Application.Entities;
+using KriptoScraper.Application.Helpers;
 using KriptoScraper.Application.Interfaces;
 
 namespace KriptoScraper.Application.Aggregators;
@@ -11,7 +12,12 @@ public class MinuteTradeAggregator : ITradeAggregator<MinuteSummary>
         if (!tradeList.Any())
             return Enumerable.Empty<MinuteSummary>();
 
-        return tradeList.GroupBy(t => TruncateToMinute(t.EventTimeUtc)).OrderBy(g => g.Key)
+        var currentUtcMinute = TimeHelper.TruncateToMinute(DateTime.UtcNow);
+
+        return tradeList
+            .Where(t => TimeHelper.TruncateToMinute(t.EventTimeUtc) < currentUtcMinute)
+            .GroupBy(t => TimeHelper.TruncateToMinute(t.EventTimeUtc))
+            .OrderBy(g => g.Key)
             .Select(group =>
                 {
                     var ordered = group.OrderBy(t => t.EventTimeUtc).ToList();
@@ -37,12 +43,6 @@ public class MinuteTradeAggregator : ITradeAggregator<MinuteSummary>
                         buyerMakerRatio: buyerMakerRatio
                     );
                 });
-    }
-
-    private DateTime TruncateToMinute(DateTime dateTime)
-    {
-        return new DateTime(dateTime.Year, dateTime.Month, dateTime.Day,
-                            dateTime.Hour, dateTime.Minute, 0, DateTimeKind.Utc);
     }
 }
 

@@ -10,8 +10,6 @@ public class TradeEventMap : ClassMap<TradeEvent>
     {
         Map(x => x.Symbol).Name("Symbol");
 
-        Map(x => x.TimeFrame).Name("TimeFrame");
-
         Map(x => x.Price)
             .Name("Price")
             .TypeConverterOption.CultureInfo(CultureInfo.InvariantCulture);

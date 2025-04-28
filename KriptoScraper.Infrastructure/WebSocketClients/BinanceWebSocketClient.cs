@@ -16,7 +16,6 @@ public class BinanceWebSocketClient : IBinanceWebSocketClient
 
             var tradeEvent = new TradeEvent(
                 Symbol: data.Symbol,
-                TimeFrame: timeframe,
                 Price: data.Price,
                 Quantity: data.Quantity,
                 EventTimeUtc: data.TradeTime.ToUniversalTime(),

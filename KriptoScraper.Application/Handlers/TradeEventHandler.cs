@@ -1,6 +1,6 @@
 ﻿using KriptoScraper.Application.Entities;
-using KriptoScraper.Application.Helpers;
 using KriptoScraper.Application.Interfaces;
+using KriptoScraper.Domain.Interfaces;
 
 namespace KriptoScraper.Application.Handlers;
 public class TradeEventHandler(
@@ -10,6 +10,6 @@ public class TradeEventHandler(
     public async Task HandleAsync(TradeEvent tradeEvent)
     {
         aggregatorService.AddTrade(tradeEvent);
-        await writer.WriteAsync(tradeEvent.Symbol,tradeEvent.TimeFrame.ToTimeSpan(), tradeEvent);
+        await writer.WriteAsync(tradeEvent.Symbol, tradeEvent);
     }
 }
