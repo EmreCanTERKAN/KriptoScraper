@@ -1,5 +1,6 @@
 ﻿using CsvHelper;
 using CsvHelper.Configuration;
+using KriptoScraper.Application.Helpers;
 using KriptoScraper.Application.Interfaces;
 using KriptoScraper.Domain.Interfaces;
 using System.Globalization;
@@ -30,7 +31,7 @@ public class CsvSummaryWriter<T> : ISummaryWriter<T> where T : ISummary
     {
         var today = DateTime.UtcNow.Date;
         var filePath = _pathProvider.GetSummaryFilePath(_symbol, _interval, today);
-        EnsureDirectoryExists(filePath);
+        FileHelper.EnsureDirectoryExists(filePath);
 
         var summaryList = summaries.ToList();
 
@@ -59,15 +60,6 @@ public class CsvSummaryWriter<T> : ISummaryWriter<T> where T : ISummary
         await writer.FlushAsync();
         stream.Flush(true);
 
-    }
-
-    private static void EnsureDirectoryExists(string filePath)
-    {
-        var directory = Path.GetDirectoryName(filePath);
-        if (!string.IsNullOrWhiteSpace(directory) && !Directory.Exists(directory))
-        {
-            Directory.CreateDirectory(directory);
-        }
     }
 }
 

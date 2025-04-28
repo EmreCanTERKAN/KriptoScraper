@@ -1,6 +1,7 @@
 ﻿using CsvHelper;
 using CsvHelper.Configuration;
 using KriptoScraper.Application.Entities;
+using KriptoScraper.Application.Helpers;
 using KriptoScraper.Application.Mappings;
 using KriptoScraper.Domain.Interfaces;
 using System.Globalization;
@@ -20,7 +21,7 @@ public class CsvTradeEventWriter : ITradeEventWriter
     public async Task WriteAsync(string symbol, TradeEvent tradeEvent)
     {
         var filePath = _logFilePathProvider.GetRawTradesPath(symbol);
-        EnsureDirectoryExists(filePath);
+        FileHelper.EnsureDirectoryExists(filePath);
 
         await _lock.WaitAsync();
         try
