@@ -69,7 +69,7 @@ public class CsvSummaryReader : ISummaryReader<MinuteSummary>
                     summaryList.Add(record);
                 }
 
-                return summaryList;
+                return summaryList.OrderBy(s => s.Period).ToList();
             }
             catch (IOException) when (attempt < MaxAttempts)
             {
@@ -111,37 +111,15 @@ public class CsvSummaryReader : ISummaryReader<MinuteSummary>
 
     private static IEnumerable<string> ReadLastLines(string filePath, int lineCount)
     {
-        var resultLines = new LinkedList<string>();
-        using var fileStream = new FileStream(
-            filePath,
-            FileMode.Open,
-            FileAccess.Read,
-            FileShare.ReadWrite);
-        long currentPosition = fileStream.Length - 1;
-        var lineBuilder = new StringBuilder();
+        var allLines = File.ReadAllLines(filePath).Skip(1).ToList();
+        var lastLines = allLines.TakeLast(lineCount).ToList();
 
-        while (currentPosition >= 0 && resultLines.Count < lineCount)
+        Console.WriteLine("📄 [ReadLastLines] Dosyadan son {0} satır alındı:", lineCount);
+        foreach (var line in lastLines)
         {
-            fileStream.Seek(currentPosition--, SeekOrigin.Begin);
-            int rawByte = fileStream.ReadByte();
-            if (rawByte == '\r')
-                continue;
-            if (rawByte == '\n')
-            {
-                resultLines.AddFirst(lineBuilder.ToString());
-                lineBuilder.Clear();
-            }
-            else
-            {
-                lineBuilder.Append((char)rawByte);
-            }
+            Console.WriteLine("   🕒 " + line);
         }
 
-        if (lineBuilder.Length > 0)
-        {
-            resultLines.AddFirst(lineBuilder.ToString());
-        }
-
-        return resultLines;
+        return lastLines;
     }
 }

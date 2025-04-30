@@ -9,7 +9,7 @@ public class MinuteSummaryMap : ClassMap<MinuteSummary>
     {
         Map(x => x.Period)
             .Name("Period")
-            .TypeConverterOption.Format("yyyy-MM-dd HH:mm:ss");
+            .TypeConverterOption.Format("MM/dd/yyyy HH:mm:ss");
 
         Map(x => x.Open)
             .Name("Open")
