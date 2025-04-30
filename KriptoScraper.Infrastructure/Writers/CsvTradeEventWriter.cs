@@ -1,8 +1,8 @@
 ﻿using CsvHelper;
 using CsvHelper.Configuration;
-using KriptoScraper.Application.Entities;
 using KriptoScraper.Application.Helpers;
 using KriptoScraper.Application.Mappings;
+using KriptoScraper.Domain.Entities;
 using KriptoScraper.Domain.Interfaces;
 using System.Globalization;
 using System.Text;
@@ -33,12 +33,13 @@ public class CsvTradeEventWriter : ITradeEventWriter
             using var csv = new CsvWriter(writer, new CsvConfiguration(CultureInfo.InvariantCulture)
             {
                 HasHeaderRecord = !fileExists,
-                ShouldQuote = _ => true
+                ShouldQuote = _ => true,
+                PrepareHeaderForMatch = args => args.Header.ToLower()
             });
 
             csv.Context.RegisterClassMap<TradeEventMap>();
 
-            if (!fileExists)
+            if (stream.Length == 0)
             {
                 csv.WriteHeader<TradeEvent>();
                 await csv.NextRecordAsync();
@@ -50,15 +51,6 @@ public class CsvTradeEventWriter : ITradeEventWriter
         finally
         {
             _lock.Release();
-        }
-    }
-
-    private static void EnsureDirectoryExists(string filePath)
-    {
-        var directory = Path.GetDirectoryName(filePath);
-        if (!string.IsNullOrWhiteSpace(directory) && !Directory.Exists(directory))
-        {
-            Directory.CreateDirectory(directory);
         }
     }
 }

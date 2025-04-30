@@ -1,4 +1,4 @@
-﻿using KriptoScraper.Application.Entities;
+﻿using KriptoScraper.Domain.Entities;
 
 namespace KriptoScraper.Application.Interfaces;
 public interface ITradeAggregator<TSummary>

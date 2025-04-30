@@ -8,20 +8,18 @@ public class TradeLoggerService(
     ITradeEventHandler tradeEventHandler,
     IOptions<TradeSettings> settings) : ITradeLoggerService
 {
-    public async Task StartLoggingAsync()
+    public async Task StartLoggingAsync(CancellationToken cancellationToken = default)
     {
         var pairs = settings.Value.Pairs;
 
-        var tasks = pairs.Select(pair => Task.Run(async () =>
+        foreach (var pair in pairs)
         {
-            // WebSocket aboneliği başlatılıyor ve işlem bekleniyor
-            await webSocketClient.SubscribeToTradeEventsAsync(pair.Symbol, pair.Timeframe, async tradeEvent =>
+            _ = webSocketClient.SubscribeToTradeEventsAsync(pair.Symbol, pair.Timeframe, async tradeEvent =>
             {
-                await tradeEventHandler.HandleAsync(tradeEvent); // Veri işleme
+                await tradeEventHandler.HandleAsync(tradeEvent);
             });
-        })).ToList();
+        }
 
-        // Tüm görevlerin tamamlanmasını bekleyelim
-        await Task.WhenAll(tasks);
+        await Task.CompletedTask;
     }
 }

@@ -1,6 +1,4 @@
-﻿using KriptoScraper.Domain.Enums;
-
-namespace KriptoScraper.Application.Entities;
+﻿namespace KriptoScraper.Domain.Entities;
 public record TradeEvent(
     string Symbol,
     decimal Price,

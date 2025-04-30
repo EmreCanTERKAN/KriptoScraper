@@ -1,5 +1,5 @@
 ﻿using CsvHelper.Configuration;
-using KriptoScraper.Application.Entities;
+using KriptoScraper.Domain.Entities;
 using System.Globalization;
 
 namespace KriptoScraper.Application.Mappings;

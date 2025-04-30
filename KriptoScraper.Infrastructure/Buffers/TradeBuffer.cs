@@ -1,5 +1,5 @@
-﻿using KriptoScraper.Application.Entities;
-using KriptoScraper.Application.Interfaces;
+﻿using KriptoScraper.Application.Interfaces;
+using KriptoScraper.Domain.Entities;
 
 namespace KriptoScraper.Application.Buffers;
 public class TradeBuffer : ITradeBuffer

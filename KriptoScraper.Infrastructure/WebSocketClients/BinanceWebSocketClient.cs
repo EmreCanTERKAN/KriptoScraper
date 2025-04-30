@@ -1,6 +1,6 @@
 ﻿using Binance.Net.Clients;
-using KriptoScraper.Application.Entities;
 using KriptoScraper.Application.Interfaces;
+using KriptoScraper.Domain.Entities;
 using KriptoScraper.Domain.Enums;
 
 namespace KriptoScraper.Infrastructure.WebSocketClients;
@@ -10,26 +10,42 @@ public class BinanceWebSocketClient : IBinanceWebSocketClient
     {
         var socketClient = new BinanceSocketClient();
 
-        var result = await socketClient.SpotApi.ExchangeData.SubscribeToTradeUpdatesAsync(symbol, async msg =>
+        while (true) // Reconnect döngüsü
         {
-            var data = msg.Data;
+            try
+            {
+                var result = await socketClient.SpotApi.ExchangeData.SubscribeToTradeUpdatesAsync(symbol, async msg =>
+                {
+                    var data = msg.Data;
 
-            var tradeEvent = new TradeEvent(
-                Symbol: data.Symbol,
-                Price: data.Price,
-                Quantity: data.Quantity,
-                EventTimeUtc: data.TradeTime.ToUniversalTime(),
-                ReceiveTimeUtc: DateTime.UtcNow,
-                IsBuyerMaker: data.BuyerIsMaker
-            );
+                    var tradeEvent = new TradeEvent(
+                        Symbol: data.Symbol,
+                        Price: data.Price,
+                        Quantity: data.Quantity,
+                        EventTimeUtc: data.TradeTime.ToUniversalTime(),
+                        ReceiveTimeUtc: DateTime.UtcNow,
+                        IsBuyerMaker: data.BuyerIsMaker
+                    );
 
-            await onMessage(tradeEvent);
-        });
+                    await onMessage(tradeEvent);
+                });
 
-        if (!result.Success)
+                if (!result.Success)
+                {
+                    Console.WriteLine($"❌ {symbol} WebSocket bağlantı hatası: {result.Error?.Message}");
+                    await Task.Delay(TimeSpan.FromSeconds(10));
+                    continue;
+                }
 
-        {
-            Console.WriteLine("❌ WebSocket aboneliği başarısız: " + result.Error?.Message);
+                // Bağlantı başarılı, çıkmak yok — bağlantı sonsuz dinliyor
+                break;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"⚠️ {symbol} için WebSocket hatası: {ex.Message}");
+                await Task.Delay(TimeSpan.FromSeconds(10)); // Reconnect denemesi için biraz bekle
+            }
         }
     }
 }
+

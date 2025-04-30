@@ -1,6 +1,6 @@
-﻿using KriptoScraper.Application.Entities;
-using KriptoScraper.Application.Helpers;
+﻿using KriptoScraper.Application.Helpers;
 using KriptoScraper.Application.Interfaces;
+using KriptoScraper.Domain.Entities;
 
 namespace KriptoScraper.Application.Services;
 public class TradeAggregatorService<TSummary>(
@@ -10,8 +10,13 @@ public class TradeAggregatorService<TSummary>(
     TimeSpan interval) : ITradeAggregatorService, IDisposable
     where TSummary : ISummary
 {
+    private List<TradeEvent> _collectedTrades = new List<TradeEvent>();
     private Timer? _timer;
-    public void AddTrade(TradeEvent tradeEvent) => buffer.Add(tradeEvent);
+    public void AddTrade(TradeEvent tradeEvent)
+    {
+        _collectedTrades.Add(tradeEvent);
+        buffer.Add(tradeEvent);
+    }
 
     public Task StartAsync(CancellationToken cancellationToken = default)
     {
@@ -38,25 +43,33 @@ public class TradeAggregatorService<TSummary>(
             var trades = buffer.Drain();
             if (!trades.Any()) return;
 
-            var summaries = aggregator.Aggregate(trades).ToList();
-            if (!summaries.Any()) return;
+            var now = DateTime.UtcNow;
+            var currentMinute = TimeHelper.TruncateToMinute(now);
 
-            await writer.WriteBatchAsync(summaries, cancellationToken);
-
-            var currentUtcMinute = TimeHelper.TruncateToMinute(DateTime.UtcNow);
-            var unfinishedTrades = trades
-                .Where(t => TimeHelper.TruncateToMinute(t.EventTimeUtc) >= currentUtcMinute)
+            var pastTrades = trades
+                .Where(t => TimeHelper.TruncateToMinute(t.EventTimeUtc) < currentMinute)
                 .ToList();
+
+            var unfinishedTrades = trades
+                .Where(t => TimeHelper.TruncateToMinute(t.EventTimeUtc) >= currentMinute)
+                .ToList();
+
+            if (!pastTrades.Any()) return;
+
+            var summaries = aggregator.Aggregate(pastTrades).ToList();
+
+            if (summaries.Any())
+            {
+                await writer.WriteBatchAsync(summaries, cancellationToken);
+            }
 
             foreach (var trade in unfinishedTrades)
             {
                 buffer.Add(trade);
             }
-
         }
         catch (Exception ex)
         {
-            // Loglama servisi varsa burada loglayabilirsin.
             Console.WriteLine($"Hata oluştu: {ex.Message}");
         }
     }
