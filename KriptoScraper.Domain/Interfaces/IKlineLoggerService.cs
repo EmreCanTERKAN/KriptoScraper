@@ -1,5 +1,5 @@
 ﻿namespace KriptoScraper.Application.Interfaces;
-public interface ITradeLoggerService
+public interface IKlineLoggerService
 {
     Task StartLoggingAsync(CancellationToken cancellationToken = default);
 }

@@ -1,8 +1,7 @@
 ﻿using KriptoScraper.Domain.Entities;
-using KriptoScraper.Domain.Enums;
 
-namespace KriptoScraper.Application.Interfaces;
+namespace KriptoScraper.Domain.Interfaces;
 public interface IBinanceWebSocketClient
 {
-    Task SubscribeToTradeEventsAsync(string symbol, Timeframe timeframe, Func<TradeEvent, Task> onMessage);
+    Task SubscribeToKline1mAsync(string symbol, Func<KlineEvent, Task> onKlineReceived);
 }

@@ -8,19 +8,19 @@ using System.Globalization;
 using System.Text;
 
 namespace KriptoScraper.Infrastructure.Writers;
-public class CsvTradeEventWriter : ITradeEventWriter
+public class CsvKlineEventWriter : IKlineEventWriter
 {
     private readonly ILogFilePathProvider _logFilePathProvider;
     private readonly SemaphoreSlim _lock = new(1, 1);
 
-    public CsvTradeEventWriter(ILogFilePathProvider logFilePathProvider)
+    public CsvKlineEventWriter(ILogFilePathProvider logFilePathProvider)
     {
         _logFilePathProvider = logFilePathProvider;
     }
 
-    public async Task WriteAsync(string symbol, TradeEvent tradeEvent)
+    public async Task WriteAsync(string symbol, KlineEvent klineEvent)
     {
-        var filePath = _logFilePathProvider.GetRawTradesPath(symbol);
+        var filePath = _logFilePathProvider.GetRawKlinesPath(symbol);
         FileHelper.EnsureDirectoryExists(filePath);
 
         await _lock.WaitAsync();
@@ -37,15 +37,15 @@ public class CsvTradeEventWriter : ITradeEventWriter
                 PrepareHeaderForMatch = args => args.Header.ToLower()
             });
 
-            csv.Context.RegisterClassMap<TradeEventMap>();
+            csv.Context.RegisterClassMap<KlineEventMap >();
 
             if (stream.Length == 0)
             {
-                csv.WriteHeader<TradeEvent>();
+                csv.WriteHeader<KlineEvent>();
                 await csv.NextRecordAsync();
             }
 
-            csv.WriteRecord(tradeEvent);
+            csv.WriteRecord(klineEvent);
             await csv.NextRecordAsync();
         }
         finally

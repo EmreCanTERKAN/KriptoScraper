@@ -1,8 +1,7 @@
 ﻿using KriptoScraper.Domain.Entities;
 
 namespace KriptoScraper.Application.Interfaces;
-public interface ITradeBuffer
+public interface IKlineEventProcessor
 {
-    void Add(TradeEvent trade);
-    List<TradeEvent> Drain();
+    Task ProcessAsync(KlineEvent klineEvent);
 }

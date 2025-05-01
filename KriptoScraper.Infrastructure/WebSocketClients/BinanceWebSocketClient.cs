@@ -1,51 +1,68 @@
-﻿using Binance.Net.Clients;
-using KriptoScraper.Application.Interfaces;
+﻿using Binance.Net.Enums;
+using Binance.Net.Interfaces;
+using Binance.Net.Interfaces.Clients;
+using CryptoExchange.Net.Objects.Sockets;
 using KriptoScraper.Domain.Entities;
-using KriptoScraper.Domain.Enums;
+using KriptoScraper.Domain.Interfaces;
+using Microsoft.Extensions.Logging;
 
 namespace KriptoScraper.Infrastructure.WebSocketClients;
-public class BinanceWebSocketClient : IBinanceWebSocketClient
+public class BinanceWebSocketClient(
+    IBinanceSocketClient socketClient,
+    ILogger logger) : IBinanceWebSocketClient
 {
-    public async Task SubscribeToTradeEventsAsync(string symbol, Timeframe timeframe, Func<TradeEvent, Task> onMessage)
+
+    public async Task SubscribeToKlineUpdatesAsync(IEnumerable<string> symbols, IEnumerable<KlineInterval> intervals, Action<DataEvent<IBinanceStreamKlineData>> onMessage, CancellationToken ct = default)
     {
-        var socketClient = new BinanceSocketClient();
-
-        while (true) // Reconnect döngüsü
+        try
         {
-            try
+            var result = await socketClient.SpotApi.ExchangeData.SubscribeToKlineUpdatesAsync(
+                symbols,
+                intervals,
+                onMessage,
+                ct
+            );
+
+            if (!result.Success)
             {
-                var result = await socketClient.SpotApi.ExchangeData.SubscribeToTradeUpdatesAsync(symbol, async msg =>
-                {
-                    var data = msg.Data;
-
-                    var tradeEvent = new TradeEvent(
-                        Symbol: data.Symbol,
-                        Price: data.Price,
-                        Quantity: data.Quantity,
-                        EventTimeUtc: data.TradeTime.ToUniversalTime(),
-                        ReceiveTimeUtc: DateTime.UtcNow,
-                        IsBuyerMaker: data.BuyerIsMaker
-                    );
-
-                    await onMessage(tradeEvent);
-                });
-
-                if (!result.Success)
-                {
-                    Console.WriteLine($"❌ {symbol} WebSocket bağlantı hatası: {result.Error?.Message}");
-                    await Task.Delay(TimeSpan.FromSeconds(10));
-                    continue;
-                }
-
-                // Bağlantı başarılı, çıkmak yok — bağlantı sonsuz dinliyor
-                break;
+                logger.LogError($"WebSocket bağlantı hatası: {result.Error?.Message}");
+                return;
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"⚠️ {symbol} için WebSocket hatası: {ex.Message}");
-                await Task.Delay(TimeSpan.FromSeconds(10)); // Reconnect denemesi için biraz bekle
-            }
+
+            logger.LogInformation("✅ WebSocket bağlantısı kuruldu.");
+        }
+        catch (Exception ex)
+        {
+            logger.LogError($"WebSocket hata: {ex.Message}");
+            throw; // Rethrow or handle based on your needs
         }
     }
+
+    public async Task SubscribeToKline1mAsync(string symbol, Func<KlineEvent, Task> onKlineReceived)
+    {
+        await SubscribeToKlineUpdatesAsync(new[] { symbol }, new[] { KlineInterval.OneMinute }, async msg =>
+        {
+            var klineData = msg.Data;
+
+            if (klineData?.Data?.Final == true)
+            {
+                var kline = klineData.Data;
+                var klineEvent = new KlineEvent(
+                    Symbol: klineData.Symbol,
+                    OpenTime: kline.OpenTime,
+                    Open: kline.OpenPrice,
+                    High: kline.HighPrice,
+                    Low: kline.LowPrice,
+                    Close: kline.ClosePrice,
+                    Volume: kline.Volume,
+                    CloseTime: kline.CloseTime,
+                    NumberOfTrades: kline.TradeCount
+                );
+
+                await onKlineReceived(klineEvent);
+            }
+        });
+    }
 }
+
 

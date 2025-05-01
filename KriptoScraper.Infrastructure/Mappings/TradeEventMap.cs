@@ -4,28 +4,18 @@ using System.Globalization;
 
 namespace KriptoScraper.Application.Mappings;
 
-public class TradeEventMap : ClassMap<TradeEvent>
+public class KlineEventMap  : ClassMap<KlineEvent>
 {
-    public TradeEventMap()
+    public KlineEventMap ()
     {
-        Map(x => x.Symbol).Name("Symbol");
-
-        Map(x => x.Price)
-            .Name("Price")
-            .TypeConverterOption.CultureInfo(CultureInfo.InvariantCulture);
-
-        Map(x => x.Quantity)
-            .Name("Quantity")
-            .TypeConverterOption.CultureInfo(CultureInfo.InvariantCulture);
-
-        Map(x => x.EventTimeUtc)
-            .Name("EventTimeUtc")
-            .TypeConverterOption.Format("o"); // ISO 8601
-
-        Map(x => x.ReceiveTimeUtc)
-            .Name("ReceiveTimeUtc")
-            .TypeConverterOption.Format("o");
-
-        Map(x => x.IsBuyerMaker).Name("IsBuyerMaker");
+        Map(m => m.Symbol).Name("symbol");
+        Map(m => m.OpenTime).Name("open_time");
+        Map(m => m.Open).Name("open");
+        Map(m => m.High).Name("high");
+        Map(m => m.Low).Name("low");
+        Map(m => m.Close).Name("close");
+        Map(m => m.Volume).Name("volume");
+        Map(m => m.CloseTime).Name("close_time");
+        Map(m => m.NumberOfTrades).Name("trades");
     }
 }
