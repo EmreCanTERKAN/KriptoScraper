@@ -1,4 +1,6 @@
-﻿using KriptoScraper.Application.Handlers;
+﻿using Binance.Net.Clients;
+using Binance.Net.Interfaces.Clients;
+using KriptoScraper.Application.Handlers;
 using KriptoScraper.Application.Interfaces;
 using KriptoScraper.Application.Services;
 using KriptoScraper.Application.Settings;
@@ -17,11 +19,14 @@ public static class InfrastructureRegistrar
 
         services.AddSingleton<IBinanceWebSocketClient, BinanceWebSocketClient>();
         services.AddSingleton<IKlineEventHandler, KlineEventHandler>();
-        services.AddSingleton<IKlineLoggerService, TradeLoggerService>();
+        services.AddSingleton<IKlineLoggerService, KlineLoggerService>();
         services.AddSingleton<IKlineEventWriter, CsvKlineEventWriter>();
         services.AddSingleton<ILogFilePathProvider, DefaultLogFilePathProvider>();
-
-
+        services.AddSingleton<IBinanceSocketClient>(sp => 
+            new BinanceSocketClient(options =>
+            {
+                
+            }));
         return services;
     }
 }

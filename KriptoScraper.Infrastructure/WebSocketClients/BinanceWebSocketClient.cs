@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 namespace KriptoScraper.Infrastructure.WebSocketClients;
 public class BinanceWebSocketClient(
     IBinanceSocketClient socketClient,
-    ILogger logger) : IBinanceWebSocketClient
+    ILogger<BinanceWebSocketClient> logger) : IBinanceWebSocketClient
 {
 
     public async Task SubscribeToKlineUpdatesAsync(IEnumerable<string> symbols, IEnumerable<KlineInterval> intervals, Action<DataEvent<IBinanceStreamKlineData>> onMessage, CancellationToken ct = default)

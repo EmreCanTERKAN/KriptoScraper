@@ -3,7 +3,7 @@ using KriptoScraper.Application.Interfaces;
 namespace KriptoScraper.Worker;
 
 public class Worker(
-    IKlineLoggerService tradeLoggerService,
+    IKlineLoggerService klineLoggerService,
     ILogger<Worker> logger) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -12,7 +12,7 @@ public class Worker(
 
         try
         {
-            await tradeLoggerService.StartLoggingAsync(stoppingToken);
+            await klineLoggerService.StartLoggingAsync(stoppingToken);
         }
         catch (OperationCanceledException)
         {

@@ -4,7 +4,7 @@ using KriptoScraper.Domain.Interfaces;
 using Microsoft.Extensions.Options;
 
 namespace KriptoScraper.Application.Services;
-public class TradeLoggerService(
+public class KlineLoggerService(
     IBinanceWebSocketClient webSocketClient,
     IKlineEventHandler tradeEventHandler,
     IOptions<TradeSettings> settings) : IKlineLoggerService
